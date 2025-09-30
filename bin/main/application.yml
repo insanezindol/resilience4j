@@ -1,0 +1,39 @@
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        failureRateThreshold: 50  #실패 비율이 이 값을 넘어가면 회로를 차단합니다.
+        slowCallRateThreshold: 100
+        slowCallDurationThreshold: 60000
+        permittedNumberOfCallsInHalfOpenState: 4 #회로가 반-개방 상태일 때, 받아들일 요청의 개수를 지정합니다.
+        maxWaitDurationInHalfOpenState: 1000 #회로가 반-개방 상태일 때, 처리하는 요청의 최대 타임아웃입니다.
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 10
+        waitDurationInOpenState: 10000
+      test1:
+        slidingWindowSize: 50
+        permittedNumberOfCallsInHalfOpenState: 10
+      test2:
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 10
+    instances:
+      hello:
+        baseConfig: default
+      backendA:
+        baseConfig: test1
+        waitDurationInOpenState: 5000
+      backendB:
+        baseConfig: test2
+
+  retry:
+    configs:
+      default:
+        maxRetryAttempts: 3
+        waitDuration: 3s
+        ignoreException:
+          - java.util.NoSuchElementException
+    instances:
+      helloRetry:
+        baseConfig: default
+        maxRetryAttempts: 3
