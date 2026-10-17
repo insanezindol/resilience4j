@@ -31,7 +31,7 @@ resilience4j:
       default:
         maxRetryAttempts: 3
         waitDuration: 3s
-        ignoreException:
+        ignoreExceptions:
           - java.util.NoSuchElementException
     instances:
       helloRetry:
